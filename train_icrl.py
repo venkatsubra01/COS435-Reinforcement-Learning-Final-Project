@@ -347,6 +347,15 @@ if __name__ == "__main__":
         args.num_agents = env.env.num_agents
         args.num_envs_agents = args.num_envs * args.num_agents
 
+    elif args.env_id == "mabrax_ant_soccer":
+        from envs.mabrax_ant_soccer import MABraxAntSoccer
+        env = MABraxAntSoccer()
+        args.obs_dim = env.observation_size - 2
+        args.goal_start_idx = env.observation_size - 4
+        args.goal_end_idx = env.observation_size - 2
+        args.num_agents = env.env.num_agents
+        args.num_envs_agents = args.num_envs * args.num_agents
+
     elif args.env_id == "mabrax_walker":
         from envs.mabrax_walker import MABraxWalker
         env = MABraxWalker()

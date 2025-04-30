@@ -12,7 +12,7 @@ from jax import numpy as jnp
 # https://github.com/google/brax/blob/main/brax/envs/ant.py
 
 
-class AntSoccer(PipelineEnv):
+class AntBall(PipelineEnv):
     def __init__(
         self,
         ctrl_cost_weight=0.5, #0.5
@@ -29,7 +29,7 @@ class AntSoccer(PipelineEnv):
         **kwargs,
     ):
         # modified to use ant_ball_soccer.xml
-        path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "assets", "ant_soccer.xml")
+        path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "assets", "ant_ball_soccer.xml")
         sys = mjcf.load(path)
 
         n_frames = 5
@@ -71,8 +71,6 @@ class AntSoccer(PipelineEnv):
         self.state_dim = 31
         self.goal_indices = jnp.array([29, 30])
         self.goal_reach_thresh = 0.5
-        print("hi")
-        print("goal_reach_thresh", self.goal_reach_thresh)
 
         if self._use_contact_forces:
             raise NotImplementedError("use_contact_forces not implemented.")
@@ -86,16 +84,12 @@ class AntSoccer(PipelineEnv):
         q = self.sys.init_q + jax.random.uniform(rng1, (self.sys.q_size(),), minval=low, maxval=hi)
         qd = hi * jax.random.normal(rng2, (self.sys.qd_size(),))
 
-
-        # DIFF
-        #============
         # set the target q, qd
         _, target, obj = self._random_target(rng)
 
         q = q.at[-4:].set(jnp.concatenate([obj, target]))
 
         qd = qd.at[-4:].set(0)
-        #============
 
         pipeline_state = self.pipeline_init(q, qd)
         obs = self._get_obs(pipeline_state)
@@ -137,12 +131,7 @@ class AntSoccer(PipelineEnv):
         ctrl_cost = self._ctrl_cost_weight * jnp.sum(jnp.square(action))
         contact_cost = 0.0
 
-
-        # DIFF
-
-        #============
         old_obs = self._get_obs(pipeline_state0)
-
         # Distance between goal and object
         old_dist = jnp.linalg.norm(old_obs[-2:] - old_obs[-4:-2])
         obs = self._get_obs(pipeline_state)
@@ -155,7 +144,6 @@ class AntSoccer(PipelineEnv):
             reward = 10 * vel_to_target + healthy_reward - ctrl_cost - contact_cost
         else:
             reward = success
-        #============
 
         done = 1.0 - is_healthy if self._terminate_when_unhealthy else 0.0
 
@@ -181,18 +169,12 @@ class AntSoccer(PipelineEnv):
         qpos = pipeline_state.q[:-4]
         qvel = pipeline_state.qd[:-4]
 
-        # DIFF
-        #============
         target_pos = pipeline_state.x.pos[-1][:2]
-        #============
 
         if self._exclude_current_positions_from_observation:
             qpos = qpos[2:]
 
-        # DIFF
-        #============
         object_position = pipeline_state.x.pos[self._object_idx][:2]
-        #============
 
         return jnp.concatenate([qpos] + [qvel] + [object_position] + [target_pos])
 

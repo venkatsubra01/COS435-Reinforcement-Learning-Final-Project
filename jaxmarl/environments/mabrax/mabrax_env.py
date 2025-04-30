@@ -2,7 +2,7 @@ from typing import Dict, Literal, Optional, Tuple
 import chex
 from jaxmarl.environments.multi_agent_env import MultiAgentEnv
 from gymnax.environments import spaces
-from brax import envs
+from brax_mod import envs
 import jax
 import jax.numpy as jnp
 from functools import partial
@@ -55,7 +55,8 @@ class MABraxEnv(MultiAgentEnv):
         self.agent_action_mapping = _agent_action_mapping[env_name]
         self.agents = list(self.agent_obs_mapping.keys())
 
-        self.num_adversaries = len(self.agent_obs_mapping)
+        # self.num_adversaries = len(self.agent_obs_mapping)
+        self.num_adversaries = 0
 
         self.num_agents = len(self.agent_obs_mapping)
         obs_sizes = {
@@ -203,6 +204,13 @@ class MABraxEnv(MultiAgentEnv):
 class Ant(MABraxEnv):
     def __init__(self, **kwargs):
         super().__init__("ant_4x2", **kwargs)
+        
+
+class AntSoccer(MABraxEnv):
+    def __init__(self, **kwargs):
+        super().__init__("antsoccer_4x2", **kwargs)
+        print(vars(self))
+        print(self.goal_reach_thresh)
 
 
 class HalfCheetah(MABraxEnv):

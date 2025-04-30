@@ -8,3 +8,4 @@ smax_*/
 wandb/
 outputs/
 */__pycache__/
+./*.pyc

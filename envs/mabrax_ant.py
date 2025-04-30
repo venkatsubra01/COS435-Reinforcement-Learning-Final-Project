@@ -19,6 +19,7 @@ class MABraxAnt(Env):
     @property
     def observation_size(self) -> int:
         return self.env.observation_spaces[self.env.agents[0]].shape[0] + 4 #env obs + global pos + goal
+        # returns 22
 
     @property
     def action_size(self) -> int:
@@ -98,6 +99,7 @@ class MABraxAnt(Env):
         success_easy = jp.array(dist < 2., dtype=float)
         state.metrics.update({"dist": dist, "success": success, "success_easy": success_easy})
 
+        # no reward calculated cuz only usable with CRL
         reward, _ = jp.zeros(2)
         return state.replace(
             pipeline_state=mpe_state, obs=obs, reward=reward, done=list(dones.values())[0].astype(jp.float32)
