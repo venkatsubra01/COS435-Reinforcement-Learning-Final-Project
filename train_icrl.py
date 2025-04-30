@@ -49,8 +49,8 @@ class Args:
     wandb_mode: str = 'offline'
     wandb_dir: str = '.'
     wandb_group: str = '.'
-    capture_video: bool = False
-    checkpoint: bool = False
+    capture_video: bool = True
+    checkpoint: bool = True
     load_path: str = ''
 
     #environment specific arguments
