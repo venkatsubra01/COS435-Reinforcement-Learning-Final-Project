@@ -31,8 +31,7 @@ class MABraxAnt(Env):
     def reset(self, rng: jax.Array) -> State:
         """ Resets the environment to an initial state. """
         key1, key2, key3 = jax.random.split(rng, 3)
-        
-        # Reset the internal MPE environment
+
         obs, state = self.env.reset(key1)
         
         _, target = self._random_target(key3)
