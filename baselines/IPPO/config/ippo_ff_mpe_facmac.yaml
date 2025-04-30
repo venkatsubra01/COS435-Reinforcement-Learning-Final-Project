@@ -18,6 +18,6 @@
 "ANNEAL_LR": True
 
 # WandB Params
-"ENTITY": "XXXX-1-XXXX-2-XXXX-8-university"
+"ENTITY": "vs9542-princeton-university"
 "PROJECT": "TEST_WANDB"
 "WANDB_MODE": "offline"

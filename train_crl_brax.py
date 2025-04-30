@@ -32,7 +32,7 @@ class Args:
     cuda: bool = True
     track: bool = True
     wandb_project_name: str = "TEST_WANDB"
-    wandb_entity: str = 'XXXX-1-XXXX-2-XXXX-8-university'
+    wandb_entity: str = 'vs9542-princeton-university'
     wandb_mode: str = 'offline'
     wandb_dir: str = '.'
     wandb_group: str = '.'
