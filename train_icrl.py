@@ -54,8 +54,8 @@ class Args:
     load_path: str = ''
 
     #environment specific arguments
-    env_id: str = "smax"
-    episode_length: int = 101
+    env_id: str = "mabrax_ant"
+    episode_length: int = 1001
     # to be filled in runtime
     obs_dim: int = 0
     goal_start_idx: int = 0
