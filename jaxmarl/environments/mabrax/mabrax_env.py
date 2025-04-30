@@ -55,6 +55,8 @@ class MABraxEnv(MultiAgentEnv):
         self.agent_action_mapping = _agent_action_mapping[env_name]
         self.agents = list(self.agent_obs_mapping.keys())
 
+        self.num_adversaries = len(self.agent_obs_mapping)
+
         self.num_agents = len(self.agent_obs_mapping)
         obs_sizes = {
             agent: self.num_agents

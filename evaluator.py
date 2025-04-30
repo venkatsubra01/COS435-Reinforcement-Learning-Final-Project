@@ -55,7 +55,7 @@ class CrlEvaluator():
             returns = eval_state.info["returned_episode_returns"]
             # Assuming the same structure as in the original code
             # Adjust the slicing based on your specific environment setup
-            num_adversaries = self._eval_env.env.env.env.env.num_adversaries
+            num_adversaries = self._eval_env.env.env.env.env._env.num_adversaries
             mean_returns = returns[:, :num_adversaries].mean(axis=(0, 1))
 
         epoch_eval_time = time.time() - t
