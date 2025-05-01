@@ -107,12 +107,6 @@ class MABraxAntSoccer(Env):
 
         # update metrics
         dist = jp.linalg.norm(mpe_state.env_state.pipeline_state.q[:2] - state.info["target"])
-        print(self.env)
-        print(self.env._env.env)
-        print(vars(self.env))
-        print("self.env._env:", vars(self.env._env))
-        print("self.env._env.*:", vars(self.env._env.goal_reach_thresh))
-        print("self.env._env.env:", vars(self.env._env.goal_reach_thresh))
         # success = jp.array(dist < self.env.goal_reach_thresh, dtype=float)  # Use goal_reach_thresh
         success = jp.array(dist < 0.5, dtype=float)  # Use goal_reach_thresh
         success_easy = jp.array(dist < 2.0, dtype=float)

@@ -18,23 +18,25 @@
 import functools
 from typing import Optional, Type
 
-from brax.envs import ant
-from brax.envs import fast
-from brax.envs import half_cheetah
-from brax.envs import hopper
-from brax.envs import humanoid
-from brax.envs import humanoidstandup
-from brax.envs import inverted_double_pendulum
-from brax.envs import inverted_pendulum
-from brax.envs import pusher
-from brax.envs import reacher
-from brax.envs import swimmer
-from brax.envs import walker2d
-from brax.envs.base import Env, PipelineEnv, State, Wrapper
-from brax.envs.wrappers import training
+from brax_mod.envs import ant
+from brax_mod.envs import ant_soccer
+from brax_mod.envs import fast
+from brax_mod.envs import half_cheetah
+from brax_mod.envs import hopper
+from brax_mod.envs import humanoid
+from brax_mod.envs import humanoidstandup
+from brax_mod.envs import inverted_double_pendulum
+from brax_mod.envs import inverted_pendulum
+from brax_mod.envs import pusher
+from brax_mod.envs import reacher
+from brax_mod.envs import swimmer
+from brax_mod.envs import walker2d
+from brax_mod.envs.base import Env, PipelineEnv, State, Wrapper
+from brax_mod.envs.wrappers import training
 
 _envs = {
     'ant': ant.Ant,
+    'antsoccer': ant_soccer.AntSoccer,
     'fast': fast.Fast,
     'halfcheetah': half_cheetah.Halfcheetah,
     'hopper': hopper.Hopper,

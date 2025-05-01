@@ -7,5 +7,5 @@ smax_*/
 ./*.pkl
 wandb/
 outputs/
-*/__pycache__/
+**/__pycache__/
 ./*.pyc

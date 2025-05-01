@@ -209,8 +209,6 @@ class Ant(MABraxEnv):
 class AntSoccer(MABraxEnv):
     def __init__(self, **kwargs):
         super().__init__("antsoccer_4x2", **kwargs)
-        print(vars(self))
-        print(self.goal_reach_thresh)
 
 
 class HalfCheetah(MABraxEnv):
