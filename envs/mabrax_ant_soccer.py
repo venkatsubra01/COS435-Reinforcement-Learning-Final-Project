@@ -1,4 +1,4 @@
-from brax_modified.envs.base import State, Env
+from brax.envs.base import State, Env
 import jax
 from jax import numpy as jp
 from jaxmarl.environments.mabrax import mabrax_env
@@ -10,16 +10,20 @@ class MABraxAntSoccer(Env):
         self.env = mabrax_env.AntSoccer()
         self.env = LogWrapper(self.env)
 
-    def get_obs(self, state, obs, target, obj):
-        qpos = state.pipeline_state.q[:2]
+    def get_obs(self, state, obs, obj, target):
+        qpos = state.pipeline_state.q[:-4]
+        qvel = state.pipeline_state.qd[:-4]
         obs_arr = jp.stack([obs[a] for a in self.env.agents])
         return jp.concatenate((obs_arr, jp.repeat(qpos[None,:], self.env.num_agents, axis=0), 
-                          jp.repeat(target[None,:], self.env.num_agents, axis=0),
-                          jp.repeat(obj[None,:], self.env.num_agents, axis=0)), axis=1)
+                        jp.repeat(qvel[None,:], self.env.num_agents, axis=0),
+                        jp.repeat(obj[None,:], self.env.num_agents, axis=0),
+                        jp.repeat(target[None,:], self.env.num_agents, axis=0)), 
+                        axis=1)
 
     @property
     def observation_size(self) -> int:
-        return self.env.observation_spaces[self.env.agents[0]].shape[0] + 4 #env obs + global pos + goal
+        #return self.env.observation_spaces[self.env.agents[0]].shape[0] + 4 #env obs + global pos + goal
+        return 51
 
     @property
     def action_size(self) -> int:
@@ -76,7 +80,7 @@ class MABraxAntSoccer(Env):
         # step internal environment
         obs, mpe_state, rewards, dones, infos = self.env.step(key_s, state.pipeline_state, actions)
         # process obs into our format
-        obs = self.get_obs(mpe_state.env_state, obs, state.info["target"], state.info["object"])
+        obs = self.get_obs(mpe_state.env_state, obs, state.info["object"], state.info["target"])
         
         # set trajectory id to differentiate between episodes
         if "steps" in state.info.keys():
@@ -100,8 +104,8 @@ class MABraxAntSoccer(Env):
         
         dist = jp.linalg.norm(state.info["object"] - state.info["target"])
         # vel_to_target = (old_dist - dist) / self.env.dt
-        success = jnp.array(dist < self.env.goal_reach_thresh, dtype=float)
-        success_easy = jnp.array(dist < 2.0, dtype=float)
+        success = jp.array(dist < 0.5, dtype=float)
+        success_easy = jp.array(dist < 2.0, dtype=float)
         state.metrics.update({"dist": dist, "success": success, "success_easy": success_easy})
 
         reward, _ = jp.zeros(2)
@@ -116,16 +120,16 @@ class MABraxAntSoccer(Env):
         rng, rng1, rng2 = jax.random.split(rng, 3)
 
         dist = 10 # originally 5
-        ang = jnp.pi * 0.5 # angle of pi/2 (directly in front of agent)
+        ang = jp.pi * 0.5 # angle of pi/2 (directly in front of agent)
         # ORIGINALLY: ang = jnp.pi * 2.0 * jax.random.uniform(rng1)
 
-        target_x = dist * jnp.cos(ang)
-        target_y = dist * jnp.sin(ang)
+        target_x = dist * jp.cos(ang)
+        target_y = dist * jp.sin(ang)
 
-        ang_obj = jnp.pi * 2.0 * jax.random.uniform(rng2)
-        obj_x_offset = jnp.cos(ang_obj)
-        obj_y_offset = jnp.sin(ang)
+        ang_obj = jp.pi * 2.0 * jax.random.uniform(rng2)
+        obj_x_offset = jp.cos(ang_obj)
+        obj_y_offset = jp.sin(ang)
 
-        target_pos = jnp.array([target_x, target_y])
-        obj_pos = target_pos * 0.2 + jnp.array([obj_x_offset, obj_y_offset])
+        target_pos = jp.array([target_x, target_y])
+        obj_pos = target_pos * 0.2 + jp.array([obj_x_offset, obj_y_offset])
         return rng, target_pos, obj_pos

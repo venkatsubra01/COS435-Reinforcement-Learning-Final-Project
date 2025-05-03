@@ -45,7 +45,7 @@ class Args:
     cuda: bool = True
     track: bool = True
     wandb_project_name: str = "TEST_WANDB"
-    wandb_entity: str = 'XXXX-1-XXXX-2-XXXX-8-university'
+    wandb_entity: str = 'vs9542-princeton-university'
     wandb_mode: str = 'offline'
     wandb_dir: str = '.'
     wandb_group: str = '.'
@@ -341,6 +341,15 @@ if __name__ == "__main__":
     elif args.env_id == "mabrax_ant":
         from envs.mabrax_ant import MABraxAnt
         env = MABraxAnt()
+        args.obs_dim = env.observation_size - 2
+        args.goal_start_idx = env.observation_size - 4
+        args.goal_end_idx = env.observation_size - 2
+        args.num_agents = env.env.num_agents
+        args.num_envs_agents = args.num_envs * args.num_agents
+
+    elif args.env_id == "mabrax_ant_soccer":
+        from envs.mabrax_ant_soccer import MABraxAntSoccer
+        env = MABraxAntSoccer()
         args.obs_dim = env.observation_size - 2
         args.goal_start_idx = env.observation_size - 4
         args.goal_end_idx = env.observation_size - 2

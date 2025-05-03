@@ -32,23 +32,23 @@ class Args:
     cuda: bool = True
     track: bool = True
     wandb_project_name: str = "TEST_WANDB"
-    wandb_entity: str = 'XXXX-1-XXXX-2-XXXX-8-university'
+    wandb_entity: str = 'vs9542-princeton-university'
     wandb_mode: str = 'offline'
     wandb_dir: str = '.'
     wandb_group: str = '.'
-    capture_video: bool = False
-    checkpoint: bool = False
+    capture_video: bool = True
+    checkpoint: bool = True
 
     #environment specific arguments
     env_id: str = "ant"
-    episode_length: int = 1000
+    episode_length: int = 1001
     # to be filled in runtime
     obs_dim: int = 0
     goal_start_idx: int = 0
     goal_end_idx: int = 0
 
     # Algorithm specific arguments
-    total_env_steps: int = 10000000
+    total_env_steps: int = 50000000
     num_epochs: int = 100
     num_envs: int = 512
     num_eval_envs: int = 128
@@ -59,7 +59,7 @@ class Args:
     gamma: float = 0.99
     logsumexp_penalty_coeff: float = 0.1
 
-    max_replay_size: int = 10000
+    max_replay_size: int = 5000 # temp change for consistency with iclr (orig 10000)
     min_replay_size: int = 1000
     
     unroll_length: int  = 62
