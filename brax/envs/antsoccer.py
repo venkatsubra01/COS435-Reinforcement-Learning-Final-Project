@@ -99,6 +99,23 @@ class AntSoccer(PipelineEnv):
     q = self.sys.init_q + jax.random.uniform(rng1, (self.sys.q_size(),), minval=low, maxval=hi)
     qd = hi * jax.random.normal(rng2, (self.sys.qd_size(),))
 
+    dist = 10 # originally 5
+    ang = jp.pi * 0.5 # angle of pi/2 (directly in front of agent)
+    # ORIGINALLY: ang = jp.pi * 2.0 * jax.random.uniform(rng1)
+
+    target_x = dist * jp.cos(ang)
+    target_y = dist * jp.sin(ang)
+
+    ang_obj = jp.pi * 2.0 * jax.random.uniform(rng3)
+    obj_x_offset = jp.cos(ang_obj)
+    obj_y_offset = jp.sin(ang)
+
+    target_pos = jp.array([target_x, target_y])
+    obj_pos = target_pos * 0.2 + jp.array([obj_x_offset, obj_y_offset])
+
+    q = q.at[-4:].set(jp.concatenate([obj_pos, target_pos]))
+    qd = qd.at[-4:].set(0)
+
     pipeline_state = self.pipeline_init(q, qd)
     obs = self._get_obs(pipeline_state)
 
@@ -137,23 +154,19 @@ class AntSoccer(PipelineEnv):
     ctrl_cost = self._ctrl_cost_weight * jp.sum(jp.square(action))
     contact_cost = 0.0
 
-    # old_obs = self._get_obs(pipeline_state0)
-    # # Distance between goal and object
-    # old_dist = jnp.linalg.norm(old_obs[-2:] - old_obs[-4:-2])
-    
-    # dist = jnp.linalg.norm(obs[-2:] - obs[-4:-2])
-    # vel_to_target = (old_dist - dist) / self.dt
-    # success = jnp.array(dist < self.goal_reach_thresh, dtype=float)
-    # success_easy = jnp.array(dist < 2.0, dtype=float)
-
+    old_obs = self._get_obs(pipeline_state0)
+    # Distance between goal and object
+    old_dist = jp.linalg.norm(old_obs[-2:] - old_obs[-4:-2])
     obs = self._get_obs(pipeline_state)
+    dist = jp.linalg.norm(obs[-2:] - obs[-4:-2])
+    vel_to_target = (old_dist - dist) / self.dt
+    success = jp.array(dist < self.goal_reach_thresh, dtype=float)
+    success_easy = jp.array(dist < 2.0, dtype=float)
 
-    reward = forward_reward + healthy_reward - ctrl_cost - contact_cost 
-    #place holder, not used for icrl training??
-    
-    
-    # if (self.dense_reward == False):
-    #     reward = success
+    if self.dense_reward:
+        reward = 10 * vel_to_target + healthy_reward - ctrl_cost - contact_cost
+    else:
+        reward = success
 
     done = 1.0 - is_healthy if self._terminate_when_unhealthy else 0.0
 

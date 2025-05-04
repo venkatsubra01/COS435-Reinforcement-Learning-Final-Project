@@ -50,7 +50,7 @@ class Args:
     wandb_dir: str = '.'
     wandb_group: str = '.'
     capture_video: bool = False
-    checkpoint: bool = False
+    checkpoint: bool = True
     load_path: str = ''
 
     #environment specific arguments

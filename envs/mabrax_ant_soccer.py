@@ -11,19 +11,17 @@ class MABraxAntSoccer(Env):
         self.env = LogWrapper(self.env)
 
     def get_obs(self, state, obs, obj, target):
-        qpos = state.pipeline_state.q[:-4]
-        qvel = state.pipeline_state.qd[:-4]
+        qpos = state.pipeline_state.q[:2]
         obs_arr = jp.stack([obs[a] for a in self.env.agents])
         return jp.concatenate((obs_arr, jp.repeat(qpos[None,:], self.env.num_agents, axis=0), 
-                        jp.repeat(qvel[None,:], self.env.num_agents, axis=0),
                         jp.repeat(obj[None,:], self.env.num_agents, axis=0),
                         jp.repeat(target[None,:], self.env.num_agents, axis=0)), 
                         axis=1)
 
     @property
     def observation_size(self) -> int:
-        #return self.env.observation_spaces[self.env.agents[0]].shape[0] + 4 #env obs + global pos + goal
-        return 51
+        return self.env.observation_spaces[self.env.agents[0]].shape[0] + 6 #env obs + global pos + ball + goal
+        #return 51
 
     @property
     def action_size(self) -> int:
@@ -39,7 +37,8 @@ class MABraxAntSoccer(Env):
         
         obs, state = self.env.reset(key1)
         
-        _, target, obj = self._random_target(key3)
+        target = state.env_state.pipeline_state.q[-2:] #obtain from internal state, rather than doing it in wrapper which doesnt seem to work
+        obj = state.env_state.pipeline_state.q[-4:-2]
 
         reward, done, zero = jp.zeros(3)
         metrics = {
@@ -79,8 +78,12 @@ class MABraxAntSoccer(Env):
         
         # step internal environment
         obs, mpe_state, rewards, dones, infos = self.env.step(key_s, state.pipeline_state, actions)
+        
         # process obs into our format
-        obs = self.get_obs(mpe_state.env_state, obs, state.info["object"], state.info["target"])
+        
+        target = mpe_state.env_state.pipeline_state.q[-2:]
+        obj = mpe_state.env_state.pipeline_state.q[-4:-2]
+        obs = self.get_obs(mpe_state.env_state, obs, obj, target)
         
         # set trajectory id to differentiate between episodes
         if "steps" in state.info.keys():
@@ -102,34 +105,16 @@ class MABraxAntSoccer(Env):
         # obs = self.env._get_obs(pipeline_state)
         # old_dist = jnp.linalg.norm(old_obs[-2:] - old_obs[-4:-2])
         
-        dist = jp.linalg.norm(state.info["object"] - state.info["target"])
+        dist = jp.linalg.norm(obj - target)
         # vel_to_target = (old_dist - dist) / self.env.dt
         success = jp.array(dist < 0.5, dtype=float)
         success_easy = jp.array(dist < 2.0, dtype=float)
         state.metrics.update({"dist": dist, "success": success, "success_easy": success_easy})
 
+        state.info.update({"object": obj, "target": target})
+        
         reward, _ = jp.zeros(2)
 
         return state.replace(
             pipeline_state=mpe_state, obs=obs, reward=reward, done=list(dones.values())[0].astype(jp.float32)
         )
-        
-    def _random_target(self, rng: jax.Array) -> Tuple[jax.Array, jax.Array]:
-        """Returns a target and object location. Target is in a random position on a circle around ant.
-        Object is in the middle between ant and target with small deviation."""
-        rng, rng1, rng2 = jax.random.split(rng, 3)
-
-        dist = 10 # originally 5
-        ang = jp.pi * 0.5 # angle of pi/2 (directly in front of agent)
-        # ORIGINALLY: ang = jnp.pi * 2.0 * jax.random.uniform(rng1)
-
-        target_x = dist * jp.cos(ang)
-        target_y = dist * jp.sin(ang)
-
-        ang_obj = jp.pi * 2.0 * jax.random.uniform(rng2)
-        obj_x_offset = jp.cos(ang_obj)
-        obj_y_offset = jp.sin(ang)
-
-        target_pos = jp.array([target_x, target_y])
-        obj_pos = target_pos * 0.2 + jp.array([obj_x_offset, obj_y_offset])
-        return rng, target_pos, obj_pos
