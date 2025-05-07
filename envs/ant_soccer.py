@@ -29,7 +29,7 @@ class AntBall(PipelineEnv):
         **kwargs,
     ):
         # modified to use ant_ball_soccer.xml
-        path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "assets", "ant_ball_soccer.xml")
+        path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "assets", "ant_soccer.xml")
         sys = mjcf.load(path)
 
         n_frames = 5
