@@ -6,6 +6,10 @@ Uses code from [Brax](https://github.com/google/brax), [JaxGCRL](https://github.
 
 ## Repo Structure
 
-### Environments
-The environments are laid out in envs/assets. The Ant environment is unmodified
+### brax/
+This folder 
+
+### envs/
+The environments are laid out in envs/assets. The Ant environment is unmodified from the Brax repository, and the ant_ball_soccer.xml file is developed by us but inspired by the AntBall environment from the JaxGCRL repository.
+
 
