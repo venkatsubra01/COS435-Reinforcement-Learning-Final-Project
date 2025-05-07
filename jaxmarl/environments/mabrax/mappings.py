@@ -18,6 +18,12 @@ _agent_action_mapping = {
         "agent_2": jnp.array([4, 5]),
         "agent_3": jnp.array([6, 7]),
     },
+    "antsoccerv2_4x2": {
+        "agent_0": jnp.array([0, 1]),
+        "agent_1": jnp.array([2, 3]),
+        "agent_2": jnp.array([4, 5]),
+        "agent_3": jnp.array([6, 7]),
+    },
     "halfcheetah_6x1": {
         "agent_0": jnp.array([0]),
         "agent_1": jnp.array([1]),
@@ -58,6 +64,12 @@ ranges: Dict[str, Dict[str, List[Union[int, Tuple[int, int]]]]] = {
         "agent_3": [(0, 5), 7, 9, 11, 12, (13, 18), 25, 26],
     },
     "antsoccer_4x2": {
+        "agent_0": [(0, 5), 6, 7, 9, 11, (13, 18), 19, 20],
+        "agent_1": [(0, 5), 7, 8, 9, 11, (13, 18), 21, 22],
+        "agent_2": [(0, 5), 7, 9, 10, 11, (13, 18), 23, 24],
+        "agent_3": [(0, 5), 7, 9, 11, 12, (13, 18), 25, 26],
+    },
+    "antsoccerv2_4x2": {
         "agent_0": [(0, 5), 6, 7, 9, 11, (13, 18), 19, 20],
         "agent_1": [(0, 5), 7, 8, 9, 11, (13, 18), 21, 22],
         "agent_2": [(0, 5), 7, 9, 10, 11, (13, 18), 23, 24],

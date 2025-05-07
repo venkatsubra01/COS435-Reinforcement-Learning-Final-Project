@@ -20,6 +20,7 @@ from typing import Optional, Type
 
 from brax.envs import ant
 from brax.envs import antsoccer 
+from brax.envs import antsoccerv2
 from brax.envs import fast
 from brax.envs import half_cheetah
 from brax.envs import hopper
@@ -37,6 +38,7 @@ from brax.envs.wrappers import training
 _envs = {
     'ant': ant.Ant,
     'antsoccer': antsoccer.AntSoccer, 
+    'antsoccerv2': antsoccerv2.AntSoccerV2,
     'fast': fast.Fast,
     'halfcheetah': half_cheetah.Halfcheetah,
     'hopper': hopper.Hopper,

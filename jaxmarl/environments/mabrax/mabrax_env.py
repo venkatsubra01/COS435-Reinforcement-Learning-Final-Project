@@ -206,6 +206,10 @@ class AntSoccer(MABraxEnv):
     def __init__(self, **kwargs):
         super().__init__("antsoccer_4x2", **kwargs)
 
+class AntSoccerV2(MABraxEnv):
+    def __init__(self, **kwargs):
+        super().__init__("antsoccerv2_4x2", **kwargs)
+
 class HalfCheetah(MABraxEnv):
     def __init__(self, **kwargs):
         super().__init__("halfcheetah_6x1", **kwargs)

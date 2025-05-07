@@ -50,7 +50,7 @@ class Args:
     wandb_dir: str = '.'
     wandb_group: str = '.'
     capture_video: bool = False
-    checkpoint: bool = True
+    checkpoint: bool = False
     load_path: str = ''
 
     #environment specific arguments
@@ -350,6 +350,15 @@ if __name__ == "__main__":
     elif args.env_id == "mabrax_ant_soccer":
         from envs.mabrax_ant_soccer import MABraxAntSoccer
         env = MABraxAntSoccer()
+        args.obs_dim = env.observation_size - 2
+        args.goal_start_idx = env.observation_size - 4
+        args.goal_end_idx = env.observation_size - 2
+        args.num_agents = env.env.num_agents
+        args.num_envs_agents = args.num_envs * args.num_agents
+
+    elif args.env_id == "mabrax_ant_soccerv2":
+        from envs.mabrax_ant_soccerv2 import MABraxAntSoccerV2
+        env = MABraxAntSoccerV2()
         args.obs_dim = env.observation_size - 2
         args.goal_start_idx = env.observation_size - 4
         args.goal_end_idx = env.observation_size - 2
@@ -821,8 +830,9 @@ if __name__ == "__main__":
             if args.wandb_mode == 'offline':
                 trigger_sync()
     
-    if args.checkpoint:
+    #if args.checkpoint:
         # Save current policy and critic params.
+    if True:
         params = (training_state.alpha_state.params, training_state.actor_state.params, training_state.critic_state.params)
         path = f"{save_path}/final.pkl"
         save_params(path, params)

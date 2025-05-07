@@ -40,7 +40,7 @@ class Args:
     checkpoint: bool = True
 
     #environment specific arguments
-    env_id: str = "ant"
+    env_id: str = "mabrax_ant_soccer"
     episode_length: int = 1001
     # to be filled in runtime
     obs_dim: int = 0
@@ -270,6 +270,18 @@ if __name__ == "__main__":
         args.obs_dim = 4
         args.goal_start_idx = 2
         args.goal_end_idx = 4
+
+    elif args.env_id == "ant_soccer":
+        from envs.ant_ball import AntBall
+        env = AntBall(
+            backend="positional",
+            exclude_current_positions_from_observation=False,
+            terminate_when_unhealthy=True,
+        )
+        
+        args.obs_dim = 31
+        args.goal_start_idx = 29
+        args.goal_end_idx = 31
 
     else:
         raise NotImplementedError
