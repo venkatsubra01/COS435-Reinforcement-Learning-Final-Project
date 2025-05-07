@@ -1,3 +1,4 @@
+<!-- This was based off of the Ant Ball environment from the JaxGCRL repository -->
 <mujoco model="ant"> <!-- Makes an ant model-->
   <compiler angle="degree" coordinate="local" inertiafromgeom="true"/> <!-- Use angle as degrees, and some simulation options-->
   <option timestep="0.01" iterations="4" />
