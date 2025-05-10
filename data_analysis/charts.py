@@ -23,10 +23,10 @@ icrl_data_frame = icrl_data_frame[icrl_data_frame["Step"] < 6500000]
 
 
 # Plot data
-plt.figure(figsize=(12, 6))
-plt.plot(crl_data_frame["Step"], crl_data_frame["Smoothed"], label="CRL")
-plt.plot(icrl_data_frame["Step"], icrl_data_frame["Smoothed"], label="ICRL")
-plt.title("CRL and ICRL Smoothed Episode Success Over Timesteps (≤ 6.5M Steps) on Ant Environment")
+plt.figure(figsize=(6, 6))
+plt.plot(crl_data_frame["Step"], crl_data_frame["Smoothed"], label="CRL", color='red')
+plt.plot(icrl_data_frame["Step"], icrl_data_frame["Smoothed"], label="ICRL", color='green')
+plt.title("CRL/ICRL Smoothed Episode Success on Ant Environment")
 plt.xlabel("Timesteps")
 plt.ylabel("Episode Success (Smoothed)")
 plt.grid(True)
@@ -53,10 +53,10 @@ ppo_dense_reward_frame = ppo_dense_reward_frame[ppo_dense_reward_frame["Step"] <
 ppo_sparse_reward_frame = ppo_sparse_reward_frame[ppo_sparse_reward_frame["Step"] < 50000000]
 
 # Plot data
-plt.figure(figsize=(12, 6))
+plt.figure(figsize=(6, 6))
 plt.plot(ppo_dense_reward_frame["Step"], ppo_dense_reward_frame["Smoothed"], label="PPO Dense Reward")
 plt.plot(ppo_sparse_reward_frame["Step"], ppo_sparse_reward_frame["Smoothed"], label="PPO Sparse Reward")
-plt.title("PPO Smoothed Episode Success Over Timesteps (≤ 50M Steps) on Ant Environment")
+plt.title("PPO Smoothed Episode Success on Ant Environment")
 plt.xlabel("Timesteps")
 plt.ylabel("Episode Success (Smoothed)")
 plt.grid(True)
@@ -90,11 +90,11 @@ crl_data_frame["Smoothed"] = crl_data_frame["reward"].rolling(window=8, min_peri
 ppo_modified_frame["Smoothed"] = ppo_modified_frame["reward"].rolling(window=8, min_periods=1).mean()
 
 # Plot figures
-plt.figure(figsize=(12, 6))
+plt.figure(figsize=(6, 6))
 plt.plot(ppo_default_frame["Step"], ppo_default_frame["Smoothed"], label="PPO Default AntSoccerV1")
 plt.plot(crl_data_frame["Step"], crl_data_frame["Smoothed"], label="CRL Default AntSoccerV1")
 plt.plot(ppo_modified_frame["Step"], ppo_modified_frame["Smoothed"], label="PPO Modified AntSoccerV1")
-plt.title("Smoothed Episode Success Over Timesteps (≤ 250M Steps) on AntSoccerV1 Environment")
+plt.title("PPO/CRL Smoothed Episode Success on AntSoccerV1 Environment")
 plt.xlabel("Timesteps")
 plt.ylabel("Episode Success (Smoothed)")
 plt.grid(True)
@@ -122,10 +122,10 @@ crl_data_frame["Smoothed"] = crl_data_frame["reward"].rolling(window=8, min_peri
 ppo_modified_frame["Smoothed"] = ppo_modified_frame["reward"].rolling(window=8, min_periods=1).mean()
 
 # Plot rewards
-plt.figure(figsize=(12, 6))
+plt.figure(figsize=(6, 6))
 plt.plot(crl_data_frame["Step"], crl_data_frame["Smoothed"], label="CRL Default AntSoccerV2")
 plt.plot(ppo_modified_frame["Step"], ppo_modified_frame["Smoothed"], label="PPO Modified AntSoccerV2")
-plt.title("Smoothed Episode Success Over Timesteps (≤ 500M Steps) on AntSoccerV2 Environment")
+plt.title("CRL/PPO Smoothed Episode Success on AntSoccerV2 Environment")
 plt.xlabel("Timesteps")
 plt.ylabel("Episode Success (Smoothed)")
 plt.grid(True)
@@ -141,9 +141,9 @@ icrl_data_frame = icrl_data_frame[["Step", "mabrax_ant_soccer__train_icrl__1__17
 icrl_data_frame.rename(columns={"mabrax_ant_soccer__train_icrl__1__1746579734 - eval/episode_success": "reward"}, inplace=True)
 icrl_data_frame["Smoothed"] = icrl_data_frame["reward"].rolling(window=8, min_periods=1).mean()
 
-plt.figure(figsize=(12, 6))
+plt.figure(figsize=(6, 6))
 plt.plot(icrl_data_frame["Step"], icrl_data_frame["Smoothed"], label="ICRL AntSoccerV1")
-plt.title("Smoothed Episode Success Over Timesteps (≤ 50M Steps) on AntSoccerV1 Environment")
+plt.title("ICRL Smoothed Episodes Success on AntSoccerV1 Environment")
 plt.xlabel("Timesteps")
 plt.ylabel("Episode Success (Smoothed)")
 plt.grid(True)
@@ -154,14 +154,13 @@ plt.savefig("AntSoccerv1_icrl.png")
 
 # ICRL on AntSoccerV2  -- https://wandb.ai/vs9542-princeton-university/TEST_WANDB/runs/4dblsd0t?nw=nwusersaij10
 icrl_data_frame = pd.read_csv("Input_Data/ICRL_AntSoccerV2.csv")
-print(f"icrl_data_frame: {icrl_data_frame}")
 icrl_data_frame = icrl_data_frame[["Step", "mabrax_ant_soccerv2__train_icrl__1__1746579584 - eval/episode_success"]]
 icrl_data_frame.rename(columns={"mabrax_ant_soccerv2__train_icrl__1__1746579584 - eval/episode_success": "reward"}, inplace=True)
 icrl_data_frame["Smoothed"] = icrl_data_frame["reward"].rolling(window=8, min_periods=1).mean()
 
-plt.figure(figsize=(12, 6))
+plt.figure(figsize=(6, 6))
 plt.plot(icrl_data_frame["Step"], icrl_data_frame["Smoothed"], label="ICRL AntSoccerV2")
-plt.title("Smoothed Episode Success Over Timesteps (≤ 50M Steps) on AntSoccerV2 Environment")
+plt.title("ICRL Smoothed Episode Success on AntSoccerV2 Environment")
 plt.xlabel("Timesteps")
 plt.ylabel("Episode Success (Smoothed)")
 plt.ylim(bottom=0)
