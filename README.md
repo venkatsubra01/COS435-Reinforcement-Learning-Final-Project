@@ -1,7 +1,8 @@
-## COS 435 Final Project Soccer: Anthony, Sai, Venkat
+## COS 435 Final Project AntBallSoccer: Anthony Zhai, Saikalyan Jogannagari, Venkat Subramanian
 
 ## Setup Instructions
 Install conda environment with ``conda env create -f environment.yml``
+Refer to [JaxGCRL](https://github.com/MichalBortkiewicz/JaxGCRL) for instructions on running the single-agent algorithms and refer to [JaxMARL](https://github.com/FLAIROx/JaxMARL/tree/main) for instructions on running the multi-agent algorithms
 
 ## Code
 Built on top of code from https://anonymous.4open.science/r/gcrl_marl/README.md, which uses code from [JaxGCRL](https://github.com/MichalBortkiewicz/JaxGCRL) and [JaxMARL](https://github.com/FLAIROx/JaxMARL/tree/main).
@@ -11,7 +12,7 @@ Built on top of code from https://anonymous.4open.science/r/gcrl_marl/README.md,
 Extensions of jaxgcrl/envs/assets/ant_ball.xml
 - brax/envs/assets/ant_soccer.xml
 - brax/envs/assets/ant_soccer_v2.xml
-    - These contain the obstacle, boundaries, etc
+    - These contain the obstacle, boundaries, etc that we added
 
 Extensions of jaxgcrl/envs/ant_ball.py
 - brax/envs/antsoccer
@@ -22,8 +23,10 @@ Extensions of jaxgcrl/envs/ant_ball.py
 brax/envs/__init__.py
 - added our new envs to a local clone of brax
 
-Single agent environments that we used to train PPO, CRL - extension of jaxgcrl/envs/ant_ball.py
-- envs/ant_soccer.py (with our new xml assets and some slight modifications to target location generation)
+
+envs/ant_soccer.py (with our new xml assets and some slight modifications to target location generation)
+- Single agent environments that we used to train PPO, CRL - extension of jaxgcrl/envs/ant_ball.py
+- We defined a dense reward function for PPO that allows it to moderately learn on AntSoccerV1 and AntSoccerV2
 
 Multi agent wrappers that we used to train ICRL - significant extension of envs/mabrax_ant.py
 - envs/mabrax_ant_soccer.py
