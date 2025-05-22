@@ -41,3 +41,6 @@ More multi agent wrapping functionality
 Small Bug Fixes
 - evaluator.py
     - Minor fix with training error due to incorrect number of agents
+ 
+## Results
+Our paper is available in the pdf titled "Benchmarking Goal-Conditioned Reinforcement Learning with Soccer Paper.pdf." The data analysis and charts shown in the paper are available under the "data_analysis" directory.
